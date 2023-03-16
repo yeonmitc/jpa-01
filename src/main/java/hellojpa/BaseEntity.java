@@ -5,11 +5,10 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity
 @Getter
 @Setter
-public class Member extends BaseEntity {
-
+@MappedSuperclass
+public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,14 +24,10 @@ public class Member extends BaseEntity {
     @Lob
     private String description;
 
-    // 지연 로딩을 하면 프록시로 조회한다
-    // 패치 타입 LAZY 설정
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id", insertable = false, updatable = false)
+    @JoinColumn(name = "team_id")
     private Team team;
 
-    public void changeTeam(Team team) {
-        this.team = team;
-        this.team.getMembers().add(this);
-    }
+
+
 }
